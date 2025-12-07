@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  modbus-dashboard:
+    build: .
+    container_name: modbus-pt100-dashboard
+    ports:
+      - "5000:5000"
+    volumes:
+      # Montar /dev para acceso a todos los puertos seriales
+      - /dev:/dev
+    restart: unless-stopped
+    # Privilegios necesarios para acceso al puerto serial
+    privileged: true
+    environment:
+      - PYTHONUNBUFFERED=1
