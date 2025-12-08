@@ -16,7 +16,7 @@ if errorlevel 1 (
 
 REM Instalar dependencias
 echo [INFO] Instalando dependencias...
-pip install pymodbus flask flask-socketio gevent gevent-websocket pyserial >nul 2>&1
+pip install "pymodbus>=3.0.0" flask flask-socketio gevent gevent-websocket pyserial >nul 2>&1
 
 echo.
 echo ============================================================
