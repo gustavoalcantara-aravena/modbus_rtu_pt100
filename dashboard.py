@@ -26,6 +26,16 @@ import argparse
 # Desactivar mensajes de pymodbus
 logging.getLogger('pymodbus').setLevel(logging.CRITICAL)
 
+# Detectar versión de pymodbus para compatibilidad
+try:
+    import pymodbus
+    PYMODBUS_VERSION = tuple(int(x) for x in pymodbus.__version__.split('.')[:2])
+except:
+    PYMODBUS_VERSION = (3, 0)  # Asumir versión moderna
+
+# En pymodbus >= 3.0 se usa 'slave', en versiones anteriores 'unit'
+SLAVE_PARAM = 'slave' if PYMODBUS_VERSION >= (3, 0) else 'unit'
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'laboratorio_modbus'
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='gevent', ping_timeout=5, ping_interval=1)
@@ -106,7 +116,7 @@ def probar_sensor_en_puerto(puerto):
             rr = client.read_holding_registers(
                 address=REGISTRO_TEMPERATURA,
                 count=1,
-                slave=DIRECCION_ESCLAVO
+                **{SLAVE_PARAM: DIRECCION_ESCLAVO}
             )
             
             sys.stderr = old_stderr
@@ -193,7 +203,7 @@ def leer_modbus():
                 rr = client.read_holding_registers(
                     address=REGISTRO_TEMPERATURA,
                     count=1,
-                    slave=DIRECCION_ESCLAVO
+                    **{SLAVE_PARAM: DIRECCION_ESCLAVO}
                 )
                 
                 sys.stderr = old_stderr
