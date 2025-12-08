@@ -14,9 +14,19 @@ if errorlevel 1 (
     exit /b 1
 )
 
-REM Instalar dependencias
-echo [INFO] Instalando dependencias...
-pip install "pymodbus>=3.0.0" flask flask-socketio gevent gevent-websocket pyserial >nul 2>&1
+REM Instalar dependencias desde requirements.txt
+echo [INFO] Instalando dependencias desde requirements.txt...
+echo.
+pip install --upgrade -r requirements.txt
+if errorlevel 1 (
+    echo [ERROR] Fallo la instalacion de dependencias
+    echo Intente ejecutar manualmente: pip install --upgrade -r requirements.txt
+    pause
+    exit /b 1
+)
+echo.
+echo [OK] Dependencias instaladas correctamente
+echo.
 
 echo.
 echo ============================================================
