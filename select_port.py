@@ -22,8 +22,11 @@ def main():
     
     while True:
         try:
-            sel = input(f"\nSeleccione el puerto (1-{len(ports)}): ")
+            sel = input(f"\nSeleccione el puerto (1-{len(ports)}): ").strip()
+            if not sel:
+                continue
             idx = int(sel) - 1
+            print(f"[DEBUG] Entrada: '{sel}', indice: {idx}, total puertos: {len(ports)}")
             if 0 <= idx < len(ports):
                 selected = ports[idx].device
                 # Guardar en archivo para que batch lo lea
@@ -32,7 +35,7 @@ def main():
                 print(f"\n[OK] Puerto seleccionado: {selected}")
                 sys.exit(0)
             else:
-                print("Numero fuera de rango, intente de nuevo.")
+                print(f"Numero fuera de rango (debe ser 1-{len(ports)}), intente de nuevo.")
         except ValueError:
             print("Ingrese un numero valido.")
         except KeyboardInterrupt:
