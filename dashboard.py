@@ -21,6 +21,7 @@ import logging
 import sys
 import os
 import glob
+import argparse
 
 # Desactivar mensajes de pymodbus
 logging.getLogger('pymodbus').setLevel(logging.CRITICAL)
@@ -251,12 +252,23 @@ def get_estado():
     })
 
 if __name__ == '__main__':
+    # Parsear argumentos de línea de comandos
+    parser = argparse.ArgumentParser(description='Dashboard Modbus RTU para sensor PT100')
+    parser.add_argument('--port', '-p', type=str, help='Puerto serial a usar (ej: COM3, /dev/ttyUSB0)')
+    args = parser.parse_args()
+    
     print("=" * 60)
     print("  DASHBOARD MODBUS RTU - LABORATORIO DE REDES INDUSTRIALES")
     print("=" * 60)
     
-    # Detectar automáticamente el puerto del sensor
-    puerto_detectado = detectar_puerto_sensor()
+    # Usar puerto especificado o detectar automáticamente
+    if args.port:
+        PUERTO = args.port
+        print(f"\n[INFO] Usando puerto especificado: {PUERTO}")
+        puerto_detectado = PUERTO
+    else:
+        # Detectar automáticamente el puerto del sensor
+        puerto_detectado = detectar_puerto_sensor()
     
     if puerto_detectado:
         # Iniciar hilo de lectura Modbus solo si se detectó el sensor
